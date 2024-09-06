@@ -58,6 +58,8 @@ def fetch_articles(request):
             # Write data rows
             for article in articles:
                 writer.writerow([article["title"], article["authors"],article["year"],str(article["cited_by"].get("value"))])
-
+            
+            # For Themis
+            # print(response)
             return response
     return JsonResponse({'error': 'No authors provided'}, status=400)
