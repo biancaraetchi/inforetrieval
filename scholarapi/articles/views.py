@@ -22,8 +22,10 @@ def fetch_author_id(request, **kwargs):
 
 # Endpoint to fetch + csv the data
 # Using a predefined author id for now
-def fetch_articles(request, **kwargs):
-    api_url = base_url+"search?engine=google_scholar_author&author_id=QlEwuLcAAAAJ&api_key="+api_key
+def fetch_articles(request):
+    # options for sort: either blank or 'pubdate'
+    sort = request.GET.get('sort', "")
+    api_url = base_url+"search?engine=google_scholar_author&author_id=QlEwuLcAAAAJ&api_key="+api_key+"&sort="+sort
     try:
         response = requests.get(api_url)
         json_data = response.json()
