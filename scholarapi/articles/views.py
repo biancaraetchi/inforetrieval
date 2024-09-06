@@ -56,9 +56,15 @@ def fetch_articles(request):
             writer.writerow(['Title','Authors','Year','Citations'])
 
             # Write data rows
+            citations=0
             for article in articles:
-                writer.writerow([article["title"], article["authors"],article["year"],str(article["cited_by"].get("value"))])
+                citation = article["cited_by"].get("value")
+                if citation is None:
+                    citation = 0
+                citations += citation
+                writer.writerow([article["title"], article["authors"],article["year"],str(citation)])
             
+            writer.writerow(["Total citations;",str(citations)])
             # For Themis
             # print(response)
             return response
