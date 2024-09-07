@@ -9,7 +9,7 @@ import csv, re
 # api_key = os.getenv('API_KEY')
 
 base_url = "https://serpapi.com/"
-api_key = "insert api key here"
+api_key = "insert your api key here"
 
 # Endpoint to fetch author ids for a particular name
 # Should change the API to the Profiles API
@@ -28,6 +28,29 @@ def fetch_author_id(author_names):
     except:
         return []
 
+def fetch_articles_for_id(author_id):
+    articles = []
+    api_url = base_url+"search?engine=google_scholar_author&author_id="+author_id+"&api_key="+api_key
+    # +"&sort="+sort
+    try:
+        response = requests.get(api_url)
+        json_data = response.json()
+        for article in json_data["articles"]:
+            articles.append(article)
+        while("serpapi_pagination" in json_data):
+            response = requests.get(json_data["serpapi_pagination"].get("next")+"&api_key="+api_key)
+            # +"&sort="+sort)
+            json_data = response.json()
+            for article in json_data["articles"]:
+                articles.append(article)
+        
+        return articles
+    
+    except:
+        return []
+    # except requests.RequestException as e:
+        # return JsonResponse({'error': 'Failed to fetch data', 'details': str(e)}, status=500)
+
 # Endpoint to fetch + csv the data
 # Using a predefined author id for now
 def fetch_articles(authors):
@@ -41,16 +64,7 @@ def fetch_articles(authors):
             return []
         articles = []
         for id in author_ids:
-            api_url = base_url+"search?engine=google_scholar_author&author_id="+id+"&api_key="+api_key
-            # +"&sort="+sort
-            try:
-                response = requests.get(api_url)
-                json_data = response.json()
-                articles.append(json_data["articles"])
-            
-            except requests.RequestException as e:
-                return []
-                # return JsonResponse({'error': 'Failed to fetch data', 'details': str(e)}, status=500)
+            articles = fetch_articles_for_id(id)
 
             # Create a HttpResponse object with CSV header
             # response = HttpResponse(content_type='text/csv')
@@ -59,7 +73,6 @@ def fetch_articles(authors):
             # Create a CSV writer object
             # writer = csv.writer(response)
 
-            articles = json_data["articles"]
             # writer.writerow(['Title','Authors','Year','Citations'])
             print('Title,Authors,Year,Citations')
 

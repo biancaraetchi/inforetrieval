@@ -26,6 +26,25 @@ def fetch_author_id(author_names):
     except:
         return []
 
+def fetch_articles_for_id(author_id, sort):
+    articles = []
+    api_url = base_url+"search?engine=google_scholar_author&author_id="+author_id+"&api_key="+api_key+"&sort="+sort
+    try:
+        response = requests.get(api_url)
+        json_data = response.json()
+        for article in json_data["articles"]:
+            articles.append(article)
+        while("serpapi_pagination" in json_data):
+            response = requests.get(json_data["serpapi_pagination"].get("next")+"&api_key="+api_key+"&sort="+sort)
+            json_data = response.json()
+            for article in json_data["articles"]:
+                articles.append(article)
+        
+        return articles
+    
+    except requests.RequestException as e:
+        return JsonResponse({'error': 'Failed to fetch data', 'details': str(e)}, status=500)
+
 # Endpoint to fetch + csv the data
 # Using a predefined author id for now
 def fetch_articles(request):
@@ -36,16 +55,8 @@ def fetch_articles(request):
         author_ids, citations_new = fetch_author_id(authors)
         if not author_ids:
             return JsonResponse({})
-        articles = []
         for id in author_ids:
-            api_url = base_url+"search?engine=google_scholar_author&author_id="+id+"&api_key="+api_key+"&sort="+sort
-            try:
-                response = requests.get(api_url)
-                json_data = response.json()
-                articles.append(json_data["articles"])
-            
-            except requests.RequestException as e:
-                return JsonResponse({'error': 'Failed to fetch data', 'details': str(e)}, status=500)
+            articles = fetch_articles_for_id(id, sort)
 
             # Create a HttpResponse object with CSV header
             response = HttpResponse(content_type='text/csv')
@@ -54,19 +65,17 @@ def fetch_articles(request):
             # Create a CSV writer object
             writer = csv.writer(response)
 
-            articles = json_data["articles"]
             writer.writerow(['Title','Authors','Year','Citations'])
 
             # Write data rows
             for article in articles:
+                print(article)
                 citation = article["cited_by"].get("value")
                 if citation is None:
                     citation = 0
                 writer.writerow([article["title"], article["authors"],article["year"],str(citation)])
             
-            # writer.writerow(["Total citations;",str(citations)])
             writer.writerow(["Total citations;",str(citations_new)])
-            # For Themis
-            # print(response)
+
             return response
     return JsonResponse({'error': 'No authors provided'}, status=400)
