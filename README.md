@@ -20,10 +20,10 @@ The following parameters are available:
 # Screenshots of input/output
 
 * Articles for author `Brian Setz`, sorted based on publishing date, with total count of self-citations:
-  ![image](https://github.com/user-attachments/assets/269d731e-793b-41af-b4d2-729ed7c34db1)
+  ![image](https://github.com/user-attachments/assets/6b239f8d-29c6-4a5a-ae18-9c4eb2411c9d)
 
 * Articles for author `Arnold Meijster`, sorted based on publishing date, with total count of self-citations:
-  ![image](https://github.com/user-attachments/assets/24d3a2b1-9878-4b26-a336-3e3fde9fffc0)
+  ![image](https://github.com/user-attachments/assets/cb205503-721c-45e1-b0dd-066414d7f2be)
 
 * Articles for author `Vasilios Andrikopoulos` with total count of self-citations:
   https://github.com/user-attachments/assets/745e8885-0af3-45d2-9b00-3f59edb175d7
