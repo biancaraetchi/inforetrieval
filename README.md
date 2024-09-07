@@ -3,10 +3,10 @@
 
 # How to run project
 
-Navigate to `scholarapi`: `cd scholarapi`
-Install requirements: `pip install -r requirements.txt`
-Create `.env` file; copy all variables from `.env_example`, adding your API key
-Run server on `localhost:8000`: `python manage.py runserver`
+* Navigate to `scholarapi`: `cd scholarapi`
+* Install requirements: `pip install -r requirements.txt`
+* Create `.env` file; copy all variables from `.env_example`, adding your API key
+* Run server on `localhost:8000`: `python manage.py runserver`
 
 # API specifications
 
