@@ -18,11 +18,9 @@ def fetch_author_id(author_names):
         response = requests.get(api_url)
         json_data = response.json()
         authors = []
-        citations = 0
         for author in json_data["profiles"]:
             authors.append(author["author_id"])
-            citations += author["cited_by"]
-        return authors, citations
+        return authors
     except:
         return []
 
@@ -73,12 +71,13 @@ def find_self_citations(articles, author_name, author_id):
 def fetch_articles(request):
     # options for sort: either blank or 'pubdate'
     sort = request.GET.get('sort', "")
-    self_citation = request.GET.get('self_citation', False)
+    self_citation = request.GET.get('self_citation', "")
     authors = request.GET.get('authors', "")
     if authors:
-        author_ids, citations_new = fetch_author_id(authors)
+        author_ids = fetch_author_id(authors)
         if not author_ids:
             return JsonResponse({})
+        citations=0
         for id in author_ids:
             articles = fetch_articles_for_id(id, sort)
             if self_citation:
@@ -86,7 +85,7 @@ def fetch_articles(request):
 
             # Create a HttpResponse object with CSV header
             response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename="data.csv"'
+            response['Content-Disposition'] = 'attachment; filename="'+authors+'_'+sort+'_'+self_citation+'.csv"'
 
             # Create a CSV writer object
             writer = csv.writer(response)
@@ -98,11 +97,12 @@ def fetch_articles(request):
                 citation = article["cited_by"].get("value")
                 if citation is None:
                     citation = 0
+                citations += citation
                 writer.writerow([article["title"], article["authors"],article["year"],str(citation)])
             
-            writer.writerow(["Total citations;",str(citations_new)])
+            writer.writerow(["Total citations",str(citations)])
             if self_citation:
-                writer.writerow(["Self citations;",str(self_citations)])
+                writer.writerow(["Self citations",str(self_citations)])
 
             return response
     return JsonResponse({'error': 'No authors provided'}, status=400)
