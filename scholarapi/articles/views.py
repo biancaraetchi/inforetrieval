@@ -3,6 +3,7 @@ import csv, re
 import os
 from django.http import JsonResponse, HttpResponse
 from dotenv import load_dotenv
+from io import StringIO
 
 load_dotenv()
 
@@ -83,12 +84,9 @@ def fetch_articles(request):
             if self_citation:
                 self_citations = find_self_citations(articles, authors, id)
 
-            # Create a HttpResponse object with CSV header
-            response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename="'+authors+'_'+sort+'_'+self_citation+'.csv"'
-
             # Create a CSV writer object
-            writer = csv.writer(response)
+            buffer = StringIO()
+            writer = csv.writer(buffer)
 
             writer.writerow(['Title','Authors','Year','Citations'])
 
@@ -103,6 +101,8 @@ def fetch_articles(request):
             writer.writerow(["Total citations",str(citations)])
             if self_citation:
                 writer.writerow(["Self citations",str(self_citations)])
+            csv_data = buffer.getvalue()
+            buffer.close()
 
-            return response
+            return HttpResponse(csv_data, content_type='text/plain')
     return JsonResponse({'error': 'No authors provided'}, status=400)
