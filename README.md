@@ -7,6 +7,9 @@
 * Install requirements: `pip install -r requirements.txt`
 * Create `.env` file; copy all variables from `.env_example`, adding your API key
 * Run server on `localhost:8000`: `python manage.py runserver`
+* Open new terminal and navigate to `pysimplegui` : `cd pysimplegui`
+* install PySimpleGui : `pip install PysimpleGui`
+* Run gui : `python gui.py`
 
 # API specifications
 
