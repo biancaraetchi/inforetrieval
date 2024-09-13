@@ -70,39 +70,73 @@ def find_self_citations(articles, author_name, author_id):
 # Endpoint to fetch + csv the data
 # Using a predefined author id for now
 def fetch_articles(request):
-    # options for sort: either blank or 'pubdate'
-    sort = request.GET.get('sort', "")
-    self_citation = request.GET.get('self_citation', "")
-    authors = request.GET.get('authors', "")
-    if authors:
+    try:
+        # Get query parameters
+        sort = request.GET.get('sort', "")
+        self_citation = request.GET.get('self_citation', "")
+        authors = request.GET.get('authors', "")
+
+        if not authors:
+            return HttpResponse("Error: No authors provided", content_type='text/plain', status=400)
+
+        # Fetch author IDs based on the provided author name
         author_ids = fetch_author_id(authors)
         if not author_ids:
-            return JsonResponse({})
-        citations=0
+            return HttpResponse("Error: No authors found", content_type='text/plain', status=404)
+
+        citations = 0
+        self_citations = 0  # Initialize self_citations count
+        all_articles = []
+
+        # Fetch articles for each author ID
         for id in author_ids:
             articles = fetch_articles_for_id(id, sort)
+
+            # Calculate self-citations if requested
             if self_citation:
                 self_citations = find_self_citations(articles, authors, id)
 
-            # Create a CSV writer object
-            buffer = StringIO()
-            writer = csv.writer(buffer)
-
-            writer.writerow(['Title','Authors','Year','Citations'])
-
-            # Write data rows
+            # Process the articles and citations
             for article in articles:
-                citation = article["cited_by"].get("value")
-                if citation is None:
-                    citation = 0
-                citations += citation
-                writer.writerow([article["title"], article["authors"],article["year"],str(citation)])
-            
-            writer.writerow(["Total citations",str(citations)])
-            if self_citation:
-                writer.writerow(["Self citations",str(self_citations)])
-            csv_data = buffer.getvalue()
-            buffer.close()
+                # Safely get the citation value, defaulting to 0 if it's None
+                citation = article.get("cited_by", {}).get("value", 0)
 
-            return HttpResponse(csv_data, content_type='text/plain')
-    return JsonResponse({'error': 'No authors provided'}, status=400)
+                # Check if the citation is None and set it to 0
+                if citation is None:
+                    citation = 0  # Handle None by setting it to 0
+
+                citations += citation  # Increment the total citations
+
+                # Add the article to the list of all articles
+                all_articles.append({
+                    'title': article["title"],
+                    'authors': article["authors"],
+                    'year': article["year"],
+                    'citations': citation
+                })
+
+        # Generate CSV output
+        buffer = StringIO()
+        writer = csv.writer(buffer)
+
+        # Write the CSV header
+        writer.writerow(['Title', 'Authors', 'Year', 'Citations'])
+
+        # Write each article's details
+        for article in all_articles:
+            writer.writerow([article['title'], article['authors'], article['year'], article['citations']])
+
+        # Write total and self-citations
+        writer.writerow(["Total citations", str(citations)])
+        if self_citation:
+            writer.writerow(["Self citations", str(self_citations)])
+
+        csv_data = buffer.getvalue()
+        buffer.close()
+
+        # Return the CSV response
+        return HttpResponse(csv_data, content_type='text/plain')
+
+    except Exception as e:
+        # Catch any exceptions and return them as a plain text error
+        return HttpResponse(f"Error: {str(e)}", content_type='text/plain', status=500)
