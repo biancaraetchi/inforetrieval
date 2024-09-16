@@ -23,31 +23,23 @@ The following parameters are available:
 # Screenshots of input/output
 
 * Articles for author `Brian Setz`, sorted based on publishing date, with total count of self-citations:
-  ![image](https://github.com/user-attachments/assets/6b239f8d-29c6-4a5a-ae18-9c4eb2411c9d)
+  ![image](https://github.com/user-attachments/assets/93f39fe6-4e45-410f-a40a-e2c419f675d7)
+  ![image](https://github.com/user-attachments/assets/c68fa6d8-74b4-4c8b-9b2e-9751c60b26cb)
 
 * Articles for author `Arnold Meijster`, sorted based on publishing date, with total count of self-citations:
-  ![image](https://github.com/user-attachments/assets/cb205503-721c-45e1-b0dd-066414d7f2be)
+  ![image](https://github.com/user-attachments/assets/3577b3b6-d424-4d99-8732-78cac230e810)
+  ![image](https://github.com/user-attachments/assets/7fdf3b12-8f12-4683-80ee-16e870deb384)
 
 * Articles for author `Vasilios Andrikopoulos` with total count of self-citations:
-  ![image](https://github.com/user-attachments/assets/a8862397-8374-4bdb-90bd-ae000c9609de)
-  ![image](https://github.com/user-attachments/assets/fc019c97-4bad-4eeb-b2d1-bde245ba393a)
-  ![image](https://github.com/user-attachments/assets/511501bd-ef8a-41e1-b6c6-62a863e8bd0d)
-
-* Articles for author `Vasilios Andrikopoulos` without self-citations:
-  ![image](https://github.com/user-attachments/assets/44249a91-bcff-4bf8-92d6-ae368f809100)
-  ![image](https://github.com/user-attachments/assets/f3b1bd48-92e7-4937-be43-80002ed132a2)
-  ![image](https://github.com/user-attachments/assets/7f6c70aa-f08b-4bd1-a4a9-be0a0ee9cde5)
+  ![image](https://github.com/user-attachments/assets/133fe42e-2498-410e-b327-375661be3cc4)
+  ![image](https://github.com/user-attachments/assets/2c9a8e55-349c-4dc2-864d-3d1d3310dc35)
 
 * Articles for author `Daniel Feitosa`, sorted based on publishing date, with total count of self-citations:
-  ![image](https://github.com/user-attachments/assets/124a6f23-552c-47f8-b250-599676981c7c)
-  ![image](https://github.com/user-attachments/assets/510611de-6b62-46a4-9bdc-502ef1dd9b0d)
+  ![image](https://github.com/user-attachments/assets/af4448df-36d3-4660-b218-538d4f41be7b)
+  ![image](https://github.com/user-attachments/assets/04a9d0d2-8b95-4747-91de-1db708240285)
 
-* Articles for author `George Azzopardi`, with total count of self-citations:
-  ![image](https://github.com/user-attachments/assets/0b461ba3-c56b-445c-8799-d08820283c0b)
-  ![image](https://github.com/user-attachments/assets/b920f234-9087-43a1-96df-ad65096c88ce)
-  ![image](https://github.com/user-attachments/assets/7e754679-5d6e-40aa-bcc9-aea16327fdba)
-  ![image](https://github.com/user-attachments/assets/8eb0b4ee-7e2e-4399-9d68-c4ce076faaba)
-  ![image](https://github.com/user-attachments/assets/30665fa6-823f-4e8c-aa9d-e4c49aa09e81)
-
+* Articles for author `George Azzopardi`, without total count of self-citations:
+  ![image](https://github.com/user-attachments/assets/252803f0-626d-4a03-98f5-2dc763dc65a4)
+  ![image](https://github.com/user-attachments/assets/4b11b69f-f1a9-4b31-bcd5-85fbc3bd8f0c)
 
 
