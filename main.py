@@ -29,10 +29,10 @@ def get_search_results(algo, dir="query1_cache", top_n=20):
     return ranking
 
 
-def precision_recall():
-    # TODO: Implement this function
-    p = None # precision
-    r = None # recall
+def precision_recall(baseline_links, search_results):
+    search_in_baseline = [x for x in search_results if x in baseline_links]
+    p = len(search_in_baseline)/len(search_results)
+    r = len(search_in_baseline)/len(baseline_links)
     return p, r
 
 
@@ -41,10 +41,16 @@ def precision_at_11_standard_recall_levels(retrieved_docs, relevant_docs):
     for idx, doc in enumerate(retrieved_docs):
         if doc in relevant_docs:
             pr_values_for_relevant_retrieved_docs.append(precision_recall(retrieved_docs[:idx + 1], relevant_docs))
-
-    p_values, r_values = [], []
-    # TODO: Implement this function to compute the precision values for the 11 standard recall levels
-    # INSERT YOUR CODE HERE
+    print(pr_values_for_relevant_retrieved_docs)
+    r_values = [x/10.0 for x in range(0, 11)]
+    p_values = []
+    for r_value in r_values:
+        for (x, y) in pr_values_for_relevant_retrieved_docs:
+            if x >= r_value:
+                p_values.append(y)
+                break
+    for _ in range(11-len(p_values)):
+        p_values.append(0.0)
     return r_values, p_values
 
 
@@ -99,15 +105,14 @@ def run_all_parts(dir):
     # Precision and Recall
     print('\nThe precision and recall scores for the various search algorithms with Google search as the baseline:')
     for ranking_name, retrieved_docs in search_results.items():
-        # TODO: call the precision_recall function with the proper arguments
-        p, r = precision_recall()
+        p, r = precision_recall(relevant_docs, set(retrieved_docs))
         print(f'{ranking_name.ljust(11)} ranking  ==>  precision: {round(p, 2)} \t recall: {round(r, 2)}')
 
     # Precision vs Recall Plots
     print('\nPlotting precision vs recall plots')
     for ranking_name, retrieved_docs in search_results.items():
         #TODO: call these functions with the proper parameters
-        r_values, p_values = precision_at_11_standard_recall_levels()
+        r_values, p_values = precision_at_11_standard_recall_levels(retrieved_docs, relevant_docs)
         plot_title = (f'Precision vs Recall plot for {ranking_name} ranking\n'
                       f'considering Google search as the baseline')
         plot_precision_vs_recall_curve(p_values, r_values, plot_title)
