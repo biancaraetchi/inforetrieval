@@ -41,7 +41,6 @@ def precision_at_11_standard_recall_levels(retrieved_docs, relevant_docs):
     for idx, doc in enumerate(retrieved_docs):
         if doc in relevant_docs:
             pr_values_for_relevant_retrieved_docs.append(precision_recall(retrieved_docs[:idx + 1], relevant_docs))
-    print(pr_values_for_relevant_retrieved_docs)
     r_values = [x/10.0 for x in range(0, 11)]
     p_values = []
     for r_value in r_values:
