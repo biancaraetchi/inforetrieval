@@ -53,7 +53,7 @@ def precision_at_11_standard_recall_levels(retrieved_docs, relevant_docs):
     return r_values, p_values
 
 
-def plot_precision_vs_recall_curve(p_values, r_values, plt_title=None):
+def plot_precision_vs_recall_curve(p_values, r_values, plt_title=None, dir=''):
     plt.figure()
     plt.plot(r_values, p_values, marker='.')
     if plt_title:
@@ -62,12 +62,12 @@ def plot_precision_vs_recall_curve(p_values, r_values, plt_title=None):
     plt.ylabel('Precision')
     plt.ylim([-0.1, 1.1])
     
-    plots_dir = Path(f'plots')
+    plots_dir = Path(f'plots/'+dir)
     plots_dir.mkdir(parents=True, exist_ok=True)
 
     # make plt_title suitable for file name
     plt_title = plt_title.replace('\n', ' ').replace(':', ' -').replace('/', '-').replace('?', '').replace(' ', '_')
-    plt.savefig(f'plots/{plt_title}.png')
+    plt.savefig('plots/'+dir+f'/{plt_title}.png')
     plt.show()
     plt.close()
 
@@ -114,17 +114,17 @@ def run_all_parts(dir):
         r_values, p_values = precision_at_11_standard_recall_levels(retrieved_docs, relevant_docs)
         plot_title = (f'Precision vs Recall plot for {ranking_name} ranking\n'
                       f'considering Google search as the baseline')
-        plot_precision_vs_recall_curve(p_values, r_values, plot_title)
+        plot_precision_vs_recall_curve(p_values, r_values, plot_title, dir)
 
     # Single valued Summaries
     print('\nComputing the single valued summaries')
-    for ranking_name, retrieved_docs in search_results.items():
-        # TODO: call these functions with the proper parameters
-        f_score = f_metric()
-        p_at_5_score = p_at_5()
-        p_at_7_score = p_at_7()
-        print(f'{ranking_name.ljust(11)}   ==>  f: {round(f_score, 2)} '
-              f'\t p@5: {round(p_at_5_score, 2)} \t p@7: {round(p_at_7_score, 2)}')
+    # for ranking_name, retrieved_docs in search_results.items():
+    #     # TODO: call these functions with the proper parameters
+    #     f_score = f_metric()
+    #     p_at_5_score = p_at_5()
+    #     p_at_7_score = p_at_7()
+    #     print(f'{ranking_name.ljust(11)}   ==>  f: {round(f_score, 2)} '
+    #           f'\t p@5: {round(p_at_5_score, 2)} \t p@7: {round(p_at_7_score, 2)}')
 
 
 if __name__ == '__main__':
