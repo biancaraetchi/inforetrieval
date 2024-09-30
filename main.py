@@ -31,8 +31,8 @@ def get_search_results(algo, dir="query1_cache", top_n=20):
 
 def precision_recall(baseline_links, search_results):
     search_in_baseline = [x for x in search_results if x in baseline_links]
-    p = len(search_in_baseline)/len(search_results)
-    r = len(search_in_baseline)/len(baseline_links)
+    p = len(search_in_baseline) / len(search_results)
+    r = len(search_in_baseline) / len(baseline_links)
     return p, r
 
 
@@ -41,14 +41,14 @@ def precision_at_11_standard_recall_levels(retrieved_docs, relevant_docs):
     for idx, doc in enumerate(retrieved_docs):
         if doc in relevant_docs:
             pr_values_for_relevant_retrieved_docs.append(precision_recall(retrieved_docs[:idx + 1], relevant_docs))
-    r_values = [x/10.0 for x in range(0, 11)]
+    r_values = [x / 10.0 for x in range(0, 11)]
     p_values = []
     for r_value in r_values:
         for (x, y) in pr_values_for_relevant_retrieved_docs:
             if x >= r_value:
                 p_values.append(y)
                 break
-    for _ in range(11-len(p_values)):
+    for _ in range(11 - len(p_values)):
         p_values.append(0.0)
     return r_values, p_values
 
@@ -61,33 +61,39 @@ def plot_precision_vs_recall_curve(p_values, r_values, plt_title=None, dir=''):
     plt.xlabel('Recall')
     plt.ylabel('Precision')
     plt.ylim([-0.1, 1.1])
-    
-    plots_dir = Path(f'plots/'+dir)
+
+    plots_dir = Path(f'plots/' + dir)
     plots_dir.mkdir(parents=True, exist_ok=True)
 
     # make plt_title suitable for file name
     plt_title = plt_title.replace('\n', ' ').replace(':', ' -').replace('/', '-').replace('?', '').replace(' ', '_')
-    plt.savefig('plots/'+dir+f'/{plt_title}.png')
+    plt.savefig('plots/' + dir + f'/{plt_title}.png')
     plt.show()
     plt.close()
 
 
-def f_metric():
-    # TODO: implement this function
-    p, r = None
-    return p, r
+def f_metric(precision, recall):
+    if precision + recall == 0:
+        return 0  # To handle the case where both precision and recall are 0
+    return 2 * (precision * recall) / (precision + recall)
 
 
-def p_at_5():
-    # TODO: implement this function
-    p = None
-    return p
+def precision_at_k(retrieved_docs, relevant_docs, k):
+    """
+    Calculate precision at rank k.
+    """
+    retrieved_at_k = retrieved_docs[:k]
+    relevant_retrieved = [doc for doc in retrieved_at_k if doc in relevant_docs]
+    precision = len(relevant_retrieved) / k
+    return precision
 
 
-def p_at_7():
-    #TODO: implement this function
-    p = None
-    return p
+def p_at_5(retrieved_docs, relevant_docs):
+    return precision_at_k(retrieved_docs, relevant_docs, 5)
+
+
+def p_at_10(retrieved_docs, relevant_docs):
+    return precision_at_k(retrieved_docs, relevant_docs, 10)
 
 
 def run_all_parts(dir):
@@ -110,7 +116,6 @@ def run_all_parts(dir):
     # Precision vs Recall Plots
     print('\nPlotting precision vs recall plots')
     for ranking_name, retrieved_docs in search_results.items():
-        #TODO: call these functions with the proper parameters
         r_values, p_values = precision_at_11_standard_recall_levels(retrieved_docs, relevant_docs)
         plot_title = (f'Precision vs Recall plot for {ranking_name} ranking\n'
                       f'considering Google search as the baseline')
@@ -118,17 +123,17 @@ def run_all_parts(dir):
 
     # Single valued Summaries
     print('\nComputing the single valued summaries')
-    # for ranking_name, retrieved_docs in search_results.items():
-    #     # TODO: call these functions with the proper parameters
-    #     f_score = f_metric()
-    #     p_at_5_score = p_at_5()
-    #     p_at_7_score = p_at_7()
-    #     print(f'{ranking_name.ljust(11)}   ==>  f: {round(f_score, 2)} '
-    #           f'\t p@5: {round(p_at_5_score, 2)} \t p@7: {round(p_at_7_score, 2)}')
+    for ranking_name, retrieved_docs in search_results.items():
+        p_at_5_score = p_at_5(retrieved_docs, relevant_docs)
+        p_at_10_score = p_at_10(retrieved_docs, relevant_docs)
+        precision, recall = precision_recall(relevant_docs, set(retrieved_docs))
+        f_score = f_metric(precision, recall)
+        print(
+            f'{ranking_name.ljust(11)}   ==>  F1: {round(f_score, 2)} \t P@5: {round(p_at_5_score, 2)} \t P@10: {round(p_at_10_score, 2)}')
 
 
 if __name__ == '__main__':
     print('Running for query1_cache')
-    run_all_parts(dir = 'query1_cache')
+    run_all_parts(dir='query1_cache')
     print('\nRunning for query2_cache')
-    run_all_parts(dir = 'query2_cache')
+    run_all_parts(dir='query2_cache')
