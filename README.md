@@ -24,7 +24,7 @@ Bing and DuckDuckGo both have P@5 = 0.2, P@10 = 0.2, and F1 = 0.3, showing bette
 Yahoo scores similarly in both queries, with P@5 = 0.2, P@10 = 0.2, and F1 = 0.17.
 
 ### Comparative evaluation
-When comparing the performance of the four search engines across both queries, a few trends emerge:
+When comparing the performance of the three search engines across both queries, a few trends emerge:
 
 Google consistently performs the best, achieving perfect precision and recall as expected since it serves as the baseline for relevant documents. It maintains high precision at ranks 5 and 10 and scores the highest F1, reflecting a perfect balance between precision and recall.
 
