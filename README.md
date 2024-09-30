@@ -24,7 +24,7 @@ Bing and DuckDuckGo perform identically on query 2, with P@5 = 0.2, P@10 = 0.2, 
 Yahoo performs the weakest again with P@5 = 0.2, P@10 = 0.1, and F1 = 0.17, showing that Yahoo is unable to retrieve many relevant results compared to the others.
 
 ### Comparative evaluation
-When comparing the performance of the four search engines across both queries, a few trends emerge:
+When comparing the performance of the three search engines across both queries, a few trends emerge:
 
 Google consistently performs the best, achieving perfect precision and recall as expected since it serves as the baseline for relevant documents. It not only maintains high precision at ranks 5 and 10 but also scores highest on F1, reflecting a perfect balance between precision and recall.
 
