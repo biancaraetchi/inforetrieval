@@ -98,13 +98,13 @@ def p_at_10(retrieved_docs, relevant_docs):
 
 def run_all_parts(dir):
     search_results = {
-        'google': get_search_results('google', dir, top_n=7),
+        'google': get_search_results('google', dir, top_n=7),  # Ensure Google uses 7 results
         'bing': get_search_results('bing', dir, top_n=20),
         'duckduckgo': get_search_results('duckduckgo', dir, top_n=20),
         'yahoo': get_search_results('yahoo', dir, top_n=20)
     }
 
-    # Relevant documents (Let's create a baseline using results from Google search)
+    # Relevant documents (Google's top 7 results are considered as baseline)
     relevant_docs = set(search_results['google'])
 
     # Precision and Recall
@@ -125,11 +125,11 @@ def run_all_parts(dir):
     print('\nComputing the single valued summaries')
     for ranking_name, retrieved_docs in search_results.items():
         p_at_5_score = p_at_5(retrieved_docs, relevant_docs)
-        p_at_10_score = p_at_10(retrieved_docs, relevant_docs)
+        p_at_10_score = p_at_10(retrieved_docs, relevant_docs) if len(retrieved_docs) >= 10 else precision_at_k(retrieved_docs, relevant_docs, len(retrieved_docs))
         precision, recall = precision_recall(relevant_docs, set(retrieved_docs))
         f_score = f_metric(precision, recall)
         print(
-            f'{ranking_name.ljust(11)}   ==>  F1: {round(f_score, 2)} \t P@5: {round(p_at_5_score, 2)} \t P@10: {round(p_at_10_score, 2)}')
+            f'{ranking_name.ljust(11)}   ==>  f: {round(f_score, 2)} \t p@5: {round(p_at_5_score, 2)} \t p@10: {round(p_at_10_score, 2)}')
 
 
 if __name__ == '__main__':
