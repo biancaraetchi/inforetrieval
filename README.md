@@ -1,3 +1,6 @@
+## How to run the code
+Run `python main.py > results.txt` and a generated folder `plots` and file `results.txt` will appear.
+
 ## Report
 
 ### Precision and Recall
