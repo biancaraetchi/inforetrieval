@@ -5,7 +5,7 @@ from keras_vggface.vggface import VGGFace
 from keras_vggface.utils import preprocess_input
 from scipy.spatial.distance import cosine
 from sklearn.metrics import accuracy_score, confusion_matrix
-
+import matplotlib.pyplot as plt
 
 import os
 from glob import glob
@@ -65,11 +65,24 @@ predictions = []
 test_path = os.path.join(dataset_path, 'fr_dataset', 'test')
 for i in range(11):
     person_path = os.path.join(test_path, str(i).zfill(2))
-    for filename in glob(os.path.join(person_path,'*.jpg')):
-        #TODO : YOUR CODE HERE
-        #################
-        print("YOUR CODE HERE")
-        #################
+    for filename in glob(os.path.join(person_path, '*.jpg')):
+        feature_vector = extract_features(face_reco_model, filename)
+        min_distance = float('inf')
+        predicted_label = -1
+
+        for j in range(number_of_known_people):
+            for person in database[j]:
+                distance = cosine(feature_vector, person['feature_vector'])
+
+                if distance < min_distance:
+                    min_distance = distance
+                    predicted_label = j
+
+        if min_distance > rejection_threshold:
+            predicted_label = -1
+
+        groundtruth.append(i)
+        predictions.append(predicted_label)
 
 # 1) Try different values between 1 and 10 for number_of_known_people
 #   Report accuracies (with a chart if you prefer) and confusion matrices and discuss the results
@@ -79,8 +92,3 @@ for i in range(11):
 #   Report accuracies (with a chart if you prefer) and confusion matrices and discuss the results
 print("Accuracy score: %.3f" % (accuracy_score(groundtruth, predictions)))
 print("Normalized confusion matrix\n %s" % (confusion_matrix(groundtruth, predictions, normalize='true')))
-
-# YOUR (OPTIONAL) CODE HERE FOR REPORTING OTHER RESULTS
-#################
-print("YOUR OPTIONAL CODE HERE")
-#################
