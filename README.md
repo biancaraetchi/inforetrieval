@@ -139,6 +139,6 @@
  [0.08 0.02 0.06 0.06 0.18 0.1  0.2  0.04 0.18 0.08 0.  ]]
  </pre>
 
-In Figure 1, we can see how the accuracy scores increase as the variable `number_of_known_people` is incremented. The accuracy score tells us about how well the data points were able to be classified using our model. As we can observe, the relationship between the number of known people and the accuracy is perfectly linear, the model gaining an extra 0.05 in its accuracy score for each additional person is added to our training data. The greatest value we have obtained is 0.5 for 10 people known, which tells us that the model is able to guess correctly the face of the person about half of the time at its peak.
+In Figure 1, we can see how the accuracy scores increase as the variable `number_of_known_people` is incremented. The accuracy score tells us about how well the data points were able to be classified using our model. As we can observe, the relationship between the number of known people and the accuracy is perfectly linear, the model gaining an extra 0.05 in its accuracy score for each additional person is added to our training data. The greatest value we have obtained is 0.5 for 10 people known, compared to 0.1 for 1 person, a 500\% increase in predicted accuracy. Since models generally improve with the addition of data, this observation falls within expected behaviour.
 
-Looking at the confusion matrices, we can see that, as the number increases, the
+Looking at the confusion matrices, we can see that, as the number increases, a clear diagonal of 1s is formed, signaling that the model has found correctly the true positives, the set of pictures of the known people. The last row indicates the set of unknown people and the closest 
