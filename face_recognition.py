@@ -24,7 +24,7 @@ number_of_known_people = 10
 # Number of images stored for a known person
 number_of_training_images_per_person = 10
 # Maximum distance for considering a test sample as a face of a known person
-rejection_threshold = 1.00
+rejection_threshold = 0.50
 # Dataset path - Folder in which you extracted fr_dataset.zip, you can use relative path
 dataset_path = ''
 
@@ -68,7 +68,7 @@ for i in range(11):
     for filename in glob(os.path.join(person_path, '*.jpg')):
         feature_vector = extract_features(face_reco_model, filename)
         min_distance = float('inf')
-        predicted_label = -1
+        predicted_label = 10
 
         for j in range(number_of_known_people):
             for person in database[j]:
@@ -78,11 +78,12 @@ for i in range(11):
                     min_distance = distance
                     predicted_label = j
 
-        if min_distance > rejection_threshold:
-            predicted_label = -1
-
-        groundtruth.append(i)
+        if min_distance < rejection_threshold:
+            groundtruth.append(predicted_label)
+        else:
+            groundtruth.append(10)
         predictions.append(predicted_label)
+        print(f"Test image {filename} - Ground truth: {groundtruth[len(groundtruth)-1]}, Predicted: {predicted_label}, Distance: {min_distance}")
 
 # 1) Try different values between 1 and 10 for number_of_known_people
 #   Report accuracies (with a chart if you prefer) and confusion matrices and discuss the results
