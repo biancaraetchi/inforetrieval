@@ -1,14 +1,15 @@
-#############################################################
-# Keep in mind that using this, you will not shown any plots#
-# they will be save to /plots                               #
-############################################################
-FROM --platform=linux/amd64 python:3.10.13-alpine3.18
+FROM --platform=linux/amd64 python:3.10.13
+
+RUN pip install virtualenv
+RUN virtualenv /venv
+
+RUN apt update && apt-get install ffmpeg libsm6 libxext6  -y
 
 WORKDIR /app
+COPY ./requirements.txt /app/requirements.txt
+RUN bash -c "source /venv/bin/activate && pip install -r requirements.txt"
 
-COPY requirements.txt requirements.txt
+COPY ./keras_vggface ./keras_vggface
+RUN cp -r keras_vggface /venv/lib/python3.10/site-packages/keras_vggface
 
-RUN pip install -r requirements.txt
-
-
-ENTRYPOINT [ "/bin/sh", "-c", "python main.py > results.txt"]
+ENTRYPOINT [ "/bin/bash", "-c", "source /venv/bin/activate && python face_recognition.py > results.txt 2> stderr.txt"]
