@@ -1,3 +1,7 @@
+## Code
+To run the code, build the provided `Dockerfile` as per assignment instructions.
+All of our code changes are in the `face_recognition.py` file.
+
 ## Report
 
 When analyzing the effect of the variables `number_of_known_people` and `number_of_training_images_per_person`, the rejection threshold is incredibly important, since it affects both the accuracy scores and the confusion matrices. This is why we decided to first analyze the `rejection_threshold` and then pick the result with the highest accuracy score. This way, we have a baseline idea of what the potential the proper selection of variables is.
