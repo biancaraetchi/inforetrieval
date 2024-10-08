@@ -293,6 +293,8 @@ Normalized confusion matrix
 Accuracy scores:<br>
 ![Img](./Accuracy_vs_Number_of_known_people.png)
 
+As we can see in the image, the accuracy scores are perfectly linear with the amount of people we chose to examine, scores of 0.55 to 1.00 corresponding to 1 to 10 people. The accuracy score is increasing linearly, because each increment of the `number_of_known_people` variable is equivalent to 5 images in each folder (all of the `test` images adding up to 100; therefore, a 0.05 increase). Looking at the confusion matrices, the goal is to create an identity matrix, since we picked a `rejection_threshold` resulting in a perfect accuracy score. As the `number_of_known_people` is increasing, the diagonal of 1s is starting to arise; the folders not being examined are automatically assigned to be unknown (creating the column of 1s in the last column), since the training model has no prior knowledge about them. 
+
 ### Varying `number_of_training_images_per_person`
 `rejection_threshold`=0.45 <br>
 `number_of_known_people`=10
@@ -449,3 +451,5 @@ Normalized confusion matrix
  [0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 0.]
  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1.]]
 </pre>
+
+As we can see in the above data, the lower the number of training images, the lower the accuracy score, ranging from 0.970 to 1.000 (1 to 10 for `number_of_training_images_per_person`). The variance in accuracy scores is also reflected in the confusion matrices, where some of the rows do not have a perfect prediction every time. This result is arising because of the lower amount of information each of the person receives while the model is being trained with the `training` data. Particularly, the person in the folder number `3` is more difficult to predict and requires a higher number of training images.
