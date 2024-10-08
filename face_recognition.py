@@ -24,7 +24,7 @@ number_of_known_people = 10
 # Number of images stored for a known person
 number_of_training_images_per_person = 10
 # Maximum distance for considering a test sample as a face of a known person
-rejection_threshold = 1.00
+rejection_threshold = 0.45
 # Dataset path - Folder in which you extracted fr_dataset.zip, you can use relative path
 dataset_path = ''
 
@@ -66,22 +66,23 @@ test_path = os.path.join(dataset_path, 'fr_dataset', 'test')
 for i in range(11):
     person_path = os.path.join(test_path, str(i).zfill(2))
     for filename in glob(os.path.join(person_path, '*.jpg')):
-        feature_vector = extract_features(face_reco_model, filename)
+        test_feature_vector = extract_features(face_reco_model, filename)
+        
         min_distance = float('inf')
         predicted_label = 10
 
         for j in range(number_of_known_people):
             for person in database[j]:
-                distance = cosine(feature_vector, person['feature_vector'])
+                distance = cosine(test_feature_vector, person['feature_vector'])
 
                 if distance < min_distance:
                     min_distance = distance
                     predicted_label = j
+        
+        if min_distance > rejection_threshold:
+            predicted_label = 10
 
-        if min_distance < rejection_threshold:
-            groundtruth.append(predicted_label)
-        else:
-            groundtruth.append(10)
+        groundtruth.append(i)
         predictions.append(predicted_label)
         print(f"Test image {filename} - Ground truth: {groundtruth[len(groundtruth)-1]}, Predicted: {predicted_label}, Distance: {min_distance}")
 
