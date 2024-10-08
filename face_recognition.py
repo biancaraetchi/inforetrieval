@@ -84,7 +84,6 @@ for i in range(11):
 
         groundtruth.append(i)
         predictions.append(predicted_label)
-        print(f"Test image {filename} - Ground truth: {groundtruth[len(groundtruth)-1]}, Predicted: {predicted_label}, Distance: {min_distance}")
 
 # 1) Try different values between 1 and 10 for number_of_known_people
 #   Report accuracies (with a chart if you prefer) and confusion matrices and discuss the results
