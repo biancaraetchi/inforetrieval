@@ -1,6 +1,6 @@
 ## Report
 
-When analyzing the effect of the variables `number_of_known_people` and `number_of_training_images_per_person`, the rejection threshold is incredibly important, since it affects both the accuracy scores and the confusion matrices. This is why we decided to first analyze the `rejection_threshold` and then pick the result with the highest accuracy score. This way, we have a baseline idea of what potential the proper selection of variables can reach.
+When analyzing the effect of the variables `number_of_known_people` and `number_of_training_images_per_person`, the rejection threshold is incredibly important, since it affects both the accuracy scores and the confusion matrices. This is why we decided to first analyze the `rejection_threshold` and then pick the result with the highest accuracy score. This way, we have a baseline idea of what the potential the proper selection of variables is.
 
 ### Varying `rejection_threshold`
 `number_of_known_people`=10 <br>
