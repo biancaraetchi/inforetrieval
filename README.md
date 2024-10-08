@@ -1,8 +1,12 @@
 ## Report
 
-When analyzing the effect of the variables `number_of_known_people` and `number_of_training_images_per_person`, the rejection threshold is incredibly important, since it affects both the accuracy scores and the confusion matrices. This is why we decided to first analyze the `rejection_threshold` (with `number_of_known_people`=10 and `number_of_training_images_per_person`=10) and then pick the result with the highest accuracy score. This way, we have a baseline of what potential the proper selection of variables can reach.
+When analyzing the effect of the variables `number_of_known_people` and `number_of_training_images_per_person`, the rejection threshold is incredibly important, since it affects both the accuracy scores and the confusion matrices. This is why we decided to first analyze the `rejection_threshold` and then pick the result with the highest accuracy score. This way, we have a baseline idea of what potential the proper selection of variables can reach.
 
 ### Varying `rejection_threshold`
+`number_of_known_people`=10 <br>
+`number_of_training_images_per_person`=10
+
+Accuracy scores + confusion matrices:<br>
 <pre>
 0.10:
 Accuracy score: 0.520
@@ -20,18 +24,18 @@ Normalized confusion matrix
  [0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  1. ]]
 
 0.20:
-Accuracy score: 0.910
+Accuracy score: 0.750
 Normalized confusion matrix
- [[0.6 0.  0.  0.  0.  0.  0.  0.  0.  0.  0.4]
+ [[0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  1. ]
  [0.  1.  0.  0.  0.  0.  0.  0.  0.  0.  0. ]
- [0.  0.  0.8 0.  0.  0.  0.  0.  0.  0.  0.2]
+ [0.  0.  0.2 0.  0.  0.  0.  0.  0.  0.  0.8]
  [0.  0.  0.  1.  0.  0.  0.  0.  0.  0.  0. ]
- [0.  0.  0.  0.  0.8 0.  0.  0.  0.  0.  0.2]
- [0.  0.  0.  0.  0.  1.  0.  0.  0.  0.  0. ]
- [0.  0.  0.  0.  0.  0.  0.4 0.  0.  0.  0.6]
- [0.  0.  0.  0.  0.  0.  0.  1.  0.  0.  0. ]
- [0.  0.  0.  0.  0.  0.  0.  0.  1.  0.  0. ]
- [0.  0.  0.  0.  0.  0.  0.  0.  0.  0.6 0.4]
+ [0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  1. ]
+ [0.  0.  0.  0.  0.  0.8 0.  0.  0.  0.  0.2]
+ [0.  0.  0.  0.  0.  0.  0.2 0.  0.  0.  0.8]
+ [0.  0.  0.  0.  0.  0.  0.  0.8 0.  0.  0.2]
+ [0.  0.  0.  0.  0.  0.  0.  0.  0.8 0.  0.2]
+ [0.  0.  0.  0.  0.  0.  0.  0.  0.  0.2 0.8]
  [0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  1. ]]
 
 0.45:
@@ -125,12 +129,15 @@ Normalized confusion matrix
  [0.08 0.02 0.06 0.06 0.18 0.1  0.2  0.04 0.18 0.08 0.  ]]
 </pre>
 
-
+As we can see above, the data seems to be distributed in a right-skewed bell curve: the numbers start off relatively low, with a 0.520 accuracy score for 0.1 `rejection_threshold`, reaching its peak at 0.45, with a 1 accuracy score, and then coming back down after around 0.75 `rejection_threshold`, with a 0.500 accuracy score. This suggests that the distance between the feature vectors of the known peoples' images from the respective `test` and `training` folders have no more than 0.45 cosine distance between them, while all of the ones from the `10` folder in `test` have a bigger distance than 0.45 compared to any of the known peoples' vectors. is also reflected in the confusion matrices, where the 0.5
 
 For the next experiments, we will pick `rejection_threshold`=0.45 since it results in a perfect accuracy score.
 
 ### Varying `number_of_known_people`
+`rejection_threshold`=0.45 <br>
+`number_of_training_images_per_person`=10
 
+Confusion matrices:<br>
 <pre>
 1:
 Accuracy score: 0.550
@@ -283,10 +290,14 @@ Normalized confusion matrix
  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1.]]
 </pre>
 
-
+Accuracy scores:<br>
+![Img](./Accuracy_vs_Number_of_known_people.png)
 
 ### Varying `number_of_training_images_per_person`
+`rejection_threshold`=0.45 <br>
+`number_of_known_people`=10
 
+Accuracy scores + confusion matrices:<br>
 <pre>
 1:
 Accuracy score: 0.970
