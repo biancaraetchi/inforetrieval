@@ -38,8 +38,9 @@ def read_data(folder):
 ###
 def read_text_file_whole(fileName):
   try:
-    file_obj = open(fileName, 'r')
+    file_obj = open(fileName, 'rb')
     fileContents = file_obj.read()
+    fileContents = fileContents.decode('utf-8')
   except OSError as ex:
     print("In IOErrorBlock")
     print("In method [read_text_file_whole] - " + str(ex))
