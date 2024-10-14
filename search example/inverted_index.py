@@ -562,9 +562,26 @@ class InvertedIndex:
           invDocFreq = math.log(total_docs / docFreq)
           v[x] = value * invDocFreq
 
-    # TODO:  Need to fill this in
     if log_entropy is True:
-      pass
+      total_docs = self.get_total_docs()
+      for x in range(self.get_total_terms()):
+        value = v[x]
+        if value > 0.0:
+          entropy_comp = 0
+          ll = self.terms[x][1]
+          totalDocFreq = self.terms[x][2]
+          iter = LinkedListIterator(ll)
+          while True:
+            try:
+              item = next(iter)
+              docFreq = item[1]
+              prop = docFreq / totalDocFreq
+              entropy_comp += (prop * math.log(prop))/(math.log(total_docs))
+            except StopIteration:
+              break
+          docFreq = value
+          log_entropy = math.log(1+docFreq)*(1+entropy_comp)
+          v[x] = log_entropy
         
     return v
     
@@ -642,8 +659,30 @@ class InvertedIndex:
     docs = self.get_total_docs()
     terms = self.get_total_terms()
 
-    # TODO
-    pass
+    for t in self.terms:
+      # Get list of documents for this term
+      ll = t[1]
+      totalDocFreq = t[2]
+      
+      iter = LinkedListIterator(ll)
+      iter2 = LinkedListIterator(ll)
+      entropy_comp = 0
+      while True:
+        try:
+          item = next(iter)
+          docFreq = item[1]
+          prop = docFreq / totalDocFreq
+          entropy_comp += (prop * math.log(prop))/(math.log(docs))
+        except StopIteration:
+          break
+      while True:
+        try:  
+          item = next(iter2)
+          docFreq = item[1]
+          log_entropy = math.log(1+docFreq)*(1+entropy_comp)
+          item[3] = log_entropy
+        except StopIteration: 
+          break
 
 ### Debugging random junk below
 
