@@ -25,6 +25,9 @@ from nltk.stem.porter import PorterStemmer
 from collections import Counter
 import math
 import re
+import numpy as np
+from scipy.stats import spearmanr
+
 
 class InvertedIndex:
   ##
@@ -394,26 +397,58 @@ class InvertedIndex:
   # ~~~~~~~~~~~~~~~~~
   # 23/04/2021 - Created (CJL).
   ###
-  def search(self, q, tfidf = False, log_entropy = False):
-    # Sanity check flags
-    if tfidf and log_entropy:
-      raise Exception("[search]:  Error, both tfidf and log_entropy can't both be True.")
 
-    # First, process the query and turn it into an appropriate vector representation
+  def euclidean_distance(self, v1, v2):
+    dist = sum((x - y) ** 2 for x, y in zip(v1, v2)) ** 0.5
+    return dist
+
+  def pearson_correlation(self, v1, v2):
+    return np.corrcoef(v1, v2)[0, 1]
+
+  def spearman_correlation(self, v1, v2):
+    corr, _ = spearmanr(v1, v2)
+    return corr
+
+  def jaccard_similarity(self, v1, v2):
+    set1 = set([i for i, x in enumerate(v1) if x > 0])
+    set2 = set([i for i, x in enumerate(v2) if x > 0])
+    intersection = len(set1.intersection(set2))
+    union = len(set1.union(set2))
+    if union == 0:
+      return 0
+    return intersection / union
+
+
+  def search(self, q, comparison='cosine', tfidf=False, log_entropy=False):
+    # Generate the query vector
     qv = self.create_query_vector(q, tfidf, log_entropy)
-    
-    # Iterate through our corpus doing comparisons
-    results = [ ]
+
+    results = []
+
+    # Iterate through the documents and calculate similarity using the selected method
     for i in range(self.get_total_docs()):
       v = self.get_doc_vector(i)
-      cos = self.cosine_comparison(qv, v)
-      results.append((self.docs[i], cos))
-      
-    # sort list of tuples on cosine value - ranked search
-    results.sort(key=lambda x:x[1], reverse = True)
-    
+
+      if comparison == 'cosine':
+        score = self.cosine_comparison(qv, v)
+      elif comparison == 'euclidean':
+        score = self.euclidean_distance(qv, v)
+      elif comparison == 'pearson':
+        score = self.pearson_correlation(qv, v)
+      elif comparison == 'spearman':
+        score = self.spearman_correlation(qv, v)
+      elif comparison == 'jaccard':
+        score = self.jaccard_similarity(qv, v)
+      else:
+        raise Exception("Invalid comparison method")
+
+      results.append((self.docs[i], score))
+
+    # Sort results by similarity score (highest similarity first)
+    results.sort(key=lambda x: x[1], reverse=True)
+
     return results
-    
+
   ##
   # Given the state of the inverted index generate a term by document
   # matrix from its contents.
@@ -616,7 +651,7 @@ class InvertedIndex:
     len2 = math.sqrt(len2)
     
     return dot_prod / (len1 * len2)
-      
+
   ##
   # Calculates the TFIDF values for the current lexicon for future use.
   #
